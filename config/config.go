@@ -11,11 +11,14 @@ import (
 
 type Config struct {
 	Port                 int    `env:"PORT" envDefault:"8081"`
+	TTL                  int64  `env:"TTL"`
 	Version              int32  `env:"VERSION"`
 	AuthGRPCEndpoint     string `env:"AuthGRPCEndpointProfile"`
 	BookGRPCEndpoint     string `env:"AuthGRPCEndpointBook"`
 	PingPongGRPCEndpoint string `env:"AuthGRPCEndpointPingPong"`
 	ProfileGRPCEndpoint  string `env:"AuthGRPCEndpointProfile"`
+	SECRETKEY_AUTH       string `env:"SECRETKEY_AUTH"`
+	SECRETKEY_REFRESH    string `env:"SECRETKEY_REFRESH"`
 }
 
 func Load() (cfg Config) {
@@ -33,6 +36,7 @@ func Load() (cfg Config) {
 			latest = i
 		}
 	}
+	cfg.TTL = time.Now().Add(time.Minute).Unix() //*30
 	cfg.Version = endpoints[latest].Version
 	cfg.AuthGRPCEndpoint = endpoints[latest].AuthService
 	cfg.BookGRPCEndpoint = endpoints[latest].BookService

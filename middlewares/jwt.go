@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/ivansukach/http-server/config"
+	"github.com/ivansukach/gateway-service/config"
 	"github.com/labstack/echo"
 	"github.com/leshachaplin/grpc-server/protocol"
 	"time"
