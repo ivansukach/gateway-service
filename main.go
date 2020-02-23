@@ -2,9 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/ivansukach/book-service-http/handlers"
 	"github.com/ivansukach/book-service/protocol"
 	"github.com/ivansukach/gateway-service/config"
 	"github.com/ivansukach/gateway-service/handlers"
+	"github.com/ivansukach/gateway-service/handlers/authentication-service"
+	"github.com/ivansukach/gateway-service/handlers/ping-pong"
+	"github.com/ivansukach/gateway-service/handlers/profile-service"
 	protocolPP "github.com/ivansukach/grpc-server/protocol"
 	"github.com/labstack/echo"
 	log "github.com/sirupsen/logrus"
@@ -25,7 +29,7 @@ func main() {
 	defer clientConnPingPongInterface.Close()
 
 	clientPP := protocolPP.NewGetResponseClient(clientConnPingPongInterface)
-	pp := handlers.NewHandlerPP(clientPP)
+	pp := ping_pong.NewHandlerPP(clientPP)
 
 	clientConnProfileInterface, err := grpc.Dial(cfg.AuthGRPCEndpointProfile, opts)
 	if err != nil {
@@ -35,7 +39,7 @@ func main() {
 	defer clientConnProfileInterface.Close()
 
 	clientPS := protocolPP.NewGetResponseClient(clientConnProfileInterface)
-	ps := handlers.NewHandlerPS(clientPS)
+	ps := profile_service.NewHandlerPS(clientPS)
 
 	clientConnBookInterface, err := grpc.Dial(cfg.AuthGRPCEndpointBook, opts)
 	if err != nil {
