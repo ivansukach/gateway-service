@@ -16,7 +16,7 @@ func (a *Auth) SignUp(c echo.Context) error {
 		log.Errorf("echo.Context Error SignUp %s", err)
 		return err
 	}
-	responseRegistration, err := a.client.SignUp(context.Background(), &protocol.SignUpRequest{
+	_, err := a.client.SignUp(context.Background(), &protocol.SignUpRequest{
 		Login:    user.Login,
 		Password: user.Password,
 	})
@@ -24,9 +24,5 @@ func (a *Auth) SignUp(c echo.Context) error {
 		log.Errorf("GRPC Error SignUp %s", err)
 		return err
 	}
-	refreshToken := responseRegistration.GetRefreshToken()
-	accessToken := responseRegistration.GetToken()
-	c.Request().Header.Set("Authorization", accessToken)
-	c.Request().Header.Set("RefreshToken", refreshToken)
-	return c.JSON(http.StatusOK, &handlers.TokenModel{AccessToken: accessToken, RefreshToken: refreshToken})
+	return c.JSON(http.StatusOK, "")
 }

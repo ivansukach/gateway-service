@@ -18,19 +18,20 @@ func (a *Auth) AddClaims(c echo.Context) error {
 		return err
 	}
 	accessToken := c.Request().Header.Get("Authorization")
+	refreshToken := c.Request().Header.Get("Refresh")
 	login := c.Request().Header.Get("login")
-	_, err := a.client.AddClaims(context.Background(), &protocol.AddClaimsRequest{Claims: claims.Claims})
+	_, err := a.client.AddClaims(context.Background(), &protocol.AddClaimsRequest{Login: login, Claims: claims.Claims})
 	fmt.Println("New Claims: ", claims.Claims)
 	if err != nil {
 		log.Errorf("GRPC Error AddClaims %s", err)
 		return err
 	}
-	responseRefresh, err := a.client.RefreshToken(context.Background(), &protocol.RefreshTokenRequest{Uuid: login, Token: accessToken})
+	responseRefresh, err := a.client.RefreshToken(context.Background(), &protocol.RefreshTokenRequest{Token: accessToken, TokenRefresh: refreshToken})
 	if err != nil {
 		c.String(400, "Something wrong during refreshing your tokens")
 		return nil
 	}
-	refreshToken := responseRefresh.GetRefreshToken()
+	refreshToken = responseRefresh.GetRefreshToken()
 	accessToken = responseRefresh.GetToken()
 	return c.JSON(http.StatusOK, &handlers.TokenModel{AccessToken: accessToken, RefreshToken: refreshToken})
 }

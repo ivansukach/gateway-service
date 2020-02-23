@@ -27,6 +27,8 @@ func (a *Auth) SignIn(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 	accessToken := responseAuth.GetToken()
-
-	return c.JSON(http.StatusOK, &handlers.TokenModel{AccessToken: accessToken})
+	refreshToken := responseAuth.GetRefreshToken()
+	c.Request().Header.Set("Authorization", accessToken)
+	c.Request().Header.Set("RefreshToken", refreshToken)
+	return c.JSON(http.StatusOK, &handlers.TokenModel{AccessToken: accessToken, RefreshToken: refreshToken})
 }

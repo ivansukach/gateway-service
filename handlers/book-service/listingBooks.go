@@ -3,7 +3,6 @@ package book_service
 import (
 	"context"
 	"fmt"
-	"github.com/ivansukach/book-service-http/handlers"
 	"github.com/ivansukach/book-service/protocol"
 	"github.com/labstack/echo"
 	log "github.com/sirupsen/logrus"
